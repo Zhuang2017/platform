@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.business.sale.dao.SalesSiteDao">
+    
+	<sql id="salesSiteColumns">
+		a.id AS "id",
+		a.number AS "number",
+		a.server_id AS "serverId",
+		a.server_address AS "serverAddress",
+		a.ip AS "ip",
+		a.status AS "status",
+		a.online_date AS "onlineDate",
+		a.domain_name AS "domainName",
+		a.user_name AS "userName",
+		a.password AS "password",
+		a.region AS "region",
+		a.temp_domain_name AS "tempDomainName",
+		a.database_password AS "databasePassword",
+		a.database_username AS "databaseUsername",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="salesSiteJoins">
+	</sql>
+    
+	<select id="get" resultType="SalesSite">
+		SELECT 
+			<include refid="salesSiteColumns"/>
+		FROM my_sales_site a
+		<include refid="salesSiteJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SalesSite">
+		SELECT 
+			<include refid="salesSiteColumns"/>
+		FROM my_sales_site a
+		<include refid="salesSiteJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="number != null and number != ''">
+				AND a.number = #{number}
+			</if>
+			<if test="serverAddress != null and serverAddress != ''">
+				AND a.server_address LIKE 
+					<if test="dbName == 'oracle'">'%'||#{serverAddress}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{serverAddress}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{serverAddress},'%')</if>
+			</if>
+			<if test="ip != null and ip != ''">
+				AND a.ip = #{ip}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="beginOnlineDate != null and endOnlineDate != null and beginOnlineDate != '' and endOnlineDate != ''">
+				AND a.online_date BETWEEN #{beginOnlineDate} AND #{endOnlineDate}
+			</if>
+			<if test="domainName != null and domainName != ''">
+				AND a.domain_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{domainName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{domainName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{domainName},'%')</if>
+			</if>
+			<if test="region != null and region != ''">
+				AND a.region LIKE 
+					<if test="dbName == 'oracle'">'%'||#{region}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{region}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{region},'%')</if>
+			</if>
+			<if test="tempDomainName != null and tempDomainName != ''">
+				AND a.temp_domain_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{tempDomainName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{tempDomainName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{tempDomainName},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SalesSite">
+		SELECT 
+			<include refid="salesSiteColumns"/>
+		FROM my_sales_site a
+		<include refid="salesSiteJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO my_sales_site(
+			id,
+			number,
+			server_id,
+			server_address,
+			ip,
+			status,
+			online_date,
+			domain_name,
+			user_name,
+			password,
+			region,
+			temp_domain_name,
+			database_password,
+			database_username,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{number},
+			#{serverId},
+			#{serverAddress},
+			#{ip},
+			#{status},
+			#{onlineDate},
+			#{domainName},
+			#{userName},
+			#{password},
+			#{region},
+			#{tempDomainName},
+			#{databasePassword},
+			#{databaseUsername},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE my_sales_site SET 	
+			number = #{number},
+			server_id = #{serverId},
+			server_address = #{serverAddress},
+			ip = #{ip},
+			status = #{status},
+			online_date = #{onlineDate},
+			domain_name = #{domainName},
+			user_name = #{userName},
+			password = #{password},
+			region = #{region},
+			temp_domain_name = #{tempDomainName},
+			database_password = #{databasePassword},
+			database_username = #{databaseUsername},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE my_sales_site SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
