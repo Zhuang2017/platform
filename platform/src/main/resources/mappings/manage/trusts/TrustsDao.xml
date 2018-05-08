@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.manage.trusts.dao.TrustsDao">
+    
+	<sql id="trustsColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.leader_id AS "leader.id",
+		a.address AS "address",
+		a.phone AS "phone",
+		a.stu_count AS "stuCount",
+		a.is_confirm AS "isConfirm",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.status AS "status",
+		a.pic_small AS "picSmall",
+		a.pic_big AS "picBig",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="trustsJoins">
+		LEFT JOIN sys_user u3 ON u3.id = a.leader_id
+	</sql>
+    
+	<select id="get" resultType="Trusts">
+		SELECT 
+			<include refid="trustsColumns"/>
+		FROM my_trusts a
+		<include refid="trustsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Trusts">
+		SELECT 
+			<include refid="trustsColumns"/>
+		FROM my_trusts a
+		<include refid="trustsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="leader != null and leader.id != null and leader.id != ''">
+				AND a.leader_id = #{leader.id}
+			</if>
+			<if test="address != null and address != ''">
+				AND a.address LIKE 
+					<if test="dbName == 'oracle'">'%'||#{address}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{address}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{address},'%')</if>
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Trusts">
+		SELECT 
+			<include refid="trustsColumns"/>
+		FROM my_trusts a
+		<include refid="trustsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO my_trusts(
+			id,
+			name,
+			leader_id,
+			address,
+			phone,
+			stu_count,
+			is_confirm,
+			create_date,
+			update_date,
+			status,
+			pic_small,
+			pic_big,
+			create_by,
+			update_by,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{name},
+			#{leader.id},
+			#{address},
+			#{phone},
+			#{stuCount},
+			#{isConfirm},
+			#{createDate},
+			#{updateDate},
+			#{status},
+			#{picSmall},
+			#{picBig},
+			#{createBy.id},
+			#{updateBy.id},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE my_trusts SET 	
+			name = #{name},
+			leader_id = #{leader.id},
+			address = #{address},
+			phone = #{phone},
+			stu_count = #{stuCount},
+			update_date = #{updateDate},
+			pic_small = #{picSmall},
+			pic_big = #{picBig},
+			update_by = #{updateBy.id},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE my_trusts SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

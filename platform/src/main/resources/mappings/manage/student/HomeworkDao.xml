@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.manage.student.dao.HomeworkDao">
+    
+	<sql id="homeworkColumns">
+		a.subject_id AS "subject",
+		a.stu_id AS "student.id",
+		b.name AS "student.name",
+		a.tea_id AS "teacher.id",
+		u3.name AS "teacher.name",
+		a.title AS "title",
+		a.content AS "content",
+		a.assign_time AS "assignTime",
+		a.completion_time AS "completionTime",
+		a.completion_pic AS "completionPic",
+		a.comment AS "comment",
+		a.created AS "created",
+		a.updated AS "updated",
+		a.id AS "id",
+		a.status AS "status",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="homeworkJoins">
+		LEFT JOIN my_student b ON b.id = a.stu_id
+		LEFT JOIN sys_user u3 ON u3.id = a.tea_id
+		LEFT JOIN sys_user u16 ON u16.id = a.update_by
+	</sql>
+    
+	<select id="get" resultType="Homework">
+		SELECT 
+			<include refid="homeworkColumns"/>
+		FROM my_homework a
+		<include refid="homeworkJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Homework">
+		SELECT 
+			<include refid="homeworkColumns"/>
+		FROM my_homework a
+		<include refid="homeworkJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="subject != null and subject != ''">
+				AND a.subject_id = #{subject}
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Homework">
+		SELECT 
+			<include refid="homeworkColumns"/>
+		FROM my_homework a
+		<include refid="homeworkJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO my_homework(
+			subject_id,
+			stu_id,
+			tea_id,
+			title,
+			content,
+			assign_time,
+			completion_time,
+			completion_pic,
+			comment,
+			created,
+			updated,
+			id,
+			status,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{subject},
+			#{student.id},
+			#{teacher.id},
+			#{title},
+			#{content},
+			#{assignTime},
+			#{completionTime},
+			#{completionPic},
+			#{comment},
+			#{created},
+			#{updated},
+			#{id},
+			#{status},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE my_homework SET 	
+			subject_id = #{subject},
+			stu_id = #{student.id},
+			tea_id = #{teacher.id},
+			title = #{title},
+			content = #{content},
+			assign_time = #{assignTime},
+			completion_time = #{completionTime},
+			completion_pic = #{completionPic},
+			comment = #{comment},
+			created = #{created},
+			updated = #{updated},
+			status = #{status},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE my_homework SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

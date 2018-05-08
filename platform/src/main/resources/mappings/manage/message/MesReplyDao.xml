@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.manage.message.dao.MesReplyDao">
+    
+	<sql id="mesReplyColumns">
+		a.id AS "id",
+		a.mes_id AS "mesId",
+		a.tea_id AS "teaId",
+		a.content AS "content",
+		a.type AS "type",
+		a.status AS "status",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="mesReplyJoins">
+		LEFT JOIN my_message b ON b.id = a.mes_id
+	</sql>
+    
+	<select id="get" resultType="MesReply">
+		SELECT 
+			<include refid="mesReplyColumns"/>
+		FROM my_mes_reply a
+		<include refid="mesReplyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MesReply">
+		SELECT 
+			<include refid="mesReplyColumns"/>
+		FROM my_mes_reply a
+		<include refid="mesReplyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="mesId != null and mesId != ''">
+				AND a.mes_id = #{mesId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MesReply">
+		SELECT 
+			<include refid="mesReplyColumns"/>
+		FROM my_mes_reply a
+		<include refid="mesReplyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO my_mes_reply(
+			id,
+			mes_id,
+			tea_id,
+			content,
+			type,
+			status,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{mesId},
+			#{teaId},
+			#{content},
+			#{type},
+			#{status},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE my_mes_reply SET 	
+			mes_id = #{mesId},
+			tea_id = #{teaId},
+			content = #{content},
+			type = #{type},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE my_mes_reply SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE mes_id = #{mesId}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>

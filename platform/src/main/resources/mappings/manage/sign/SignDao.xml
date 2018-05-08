@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.manage.sign.dao.SignDao">
+    
+	<sql id="signColumns">
+		a.id AS "id",
+		a.stu_id AS "student",
+		a.sign_date AS "signDate",
+		a.sign_no1 AS "signNo1",
+		a.sign_time1 AS "signTime1",
+		a.sign_no2 AS "signNo2",
+		a.sign_time2 AS "signTime2",
+		a.sign_no3 AS "signNo3",
+		a.sign_time3 AS "signTime3",
+		a.sign_no4 AS "signNo4",
+		a.sign_time4 AS "signTime4",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="signJoins">
+	</sql>
+    
+	<select id="get" resultType="Sign">
+		SELECT 
+			<include refid="signColumns"/>
+		FROM my_sign a
+		<include refid="signJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Sign">
+		SELECT 
+			<include refid="signColumns"/>
+		FROM my_sign a
+		<include refid="signJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="beginSignDate != null and endSignDate != null and beginSignDate != '' and endSignDate != ''">
+				AND a.sign_date BETWEEN #{beginSignDate} AND #{endSignDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Sign">
+		SELECT 
+			<include refid="signColumns"/>
+		FROM my_sign a
+		<include refid="signJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO my_sign(
+			id,
+			stu_id,
+			sign_date,
+			sign_no1,
+			sign_time1,
+			sign_no2,
+			sign_time2,
+			sign_no3,
+			sign_time3,
+			sign_no4,
+			sign_time4,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{student},
+			#{signDate},
+			#{signNo1},
+			#{signTime1},
+			#{signNo2},
+			#{signTime2},
+			#{signNo3},
+			#{signTime3},
+			#{signNo4},
+			#{signTime4},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE my_sign SET 	
+			stu_id = #{student},
+			sign_date = #{signDate},
+			sign_no1 = #{signNo1},
+			sign_time1 = #{signTime1},
+			sign_no2 = #{signNo2},
+			sign_time2 = #{signTime2},
+			sign_no3 = #{signNo3},
+			sign_time3 = #{signTime3},
+			sign_no4 = #{signNo4},
+			sign_time4 = #{signTime4},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE my_sign SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

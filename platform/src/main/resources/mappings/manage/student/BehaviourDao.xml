@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.manage.student.dao.BehaviourDao">
+    
+	<sql id="behaviourColumns">
+		a.id AS "id",
+		a.stu_id AS "student.id",
+		b.name AS "student.name",
+		a.content AS "content",
+		a.content_html AS "contentHtml",
+		a.beha_date AS "behaDate",
+		a.comment AS "comment",
+		a.tea_id AS "teacher.id",
+		u7.name AS "teacher.name",
+		a.status AS "status",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="behaviourJoins">
+		LEFT JOIN my_student b ON b.id = a.stu_id
+		LEFT JOIN sys_user u7 ON u7.id = a.tea_id
+	</sql>
+    
+	<select id="get" resultType="Behaviour">
+		SELECT 
+			<include refid="behaviourColumns"/>
+		FROM my_behaviour a
+		<include refid="behaviourJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Behaviour">
+		SELECT 
+			<include refid="behaviourColumns"/>
+		FROM my_behaviour a
+		<include refid="behaviourJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="student != null and student != ''">
+				AND a.stu_id LIKE 
+					<if test="dbName == 'oracle'">'%'||#{student}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{student}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{student},'%')</if>
+			</if>
+			<if test="behaDate != null and behaDate != ''">
+				AND a.beha_date = #{behaDate}
+			</if>
+			<if test="teacher != null and teacher != ''">
+				AND a.tea_id LIKE 
+					<if test="dbName == 'oracle'">'%'||#{teacher}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{teacher}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{teacher},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Behaviour">
+		SELECT 
+			<include refid="behaviourColumns"/>
+		FROM my_behaviour a
+		<include refid="behaviourJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO my_behaviour(
+			id,
+			stu_id,
+			content,
+			content_html,
+			beha_date,
+			comment,
+			tea_id,
+			status,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{student.id},
+			#{content},
+			#{contentHtml},
+			#{behaDate},
+			#{comment},
+			#{teacher.id},
+			#{status},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE my_behaviour SET 	
+			stu_id = #{student.id},
+			content = #{content},
+			content_html = #{contentHtml},
+			beha_date = #{behaDate},
+			comment = #{comment},
+			tea_id = #{teacher.id},
+			status = #{status},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE my_behaviour SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
