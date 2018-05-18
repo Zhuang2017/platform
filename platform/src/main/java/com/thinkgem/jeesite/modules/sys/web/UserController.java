@@ -40,8 +40,6 @@ import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 
 /**
  * 用户Controller
- * @author ThinkGem
- * @version 2013-8-29
  */
 @Controller
 @RequestMapping(value = "${adminPath}/sys/user")
@@ -107,7 +105,12 @@ public class UserController extends BaseController {
 		user.setOffice(new Office(request.getParameter("office.id")));
 		// 如果新密码为空，则不更换密码
 		if (StringUtils.isNotBlank(user.getNewPassword())) {
-			user.setPassword(SystemService.entryptPassword(user.getNewPassword()));
+			// 如果用户的类型是家长，则直接明文存入密码
+			if(user.getUserType().equals("3")) {
+				user.setPassword(user.getNewPassword());
+			}else {
+				user.setPassword(SystemService.entryptPassword(user.getNewPassword()));
+			}
 		}
 		if (!beanValidator(model, user)){
 			return form(user, model);

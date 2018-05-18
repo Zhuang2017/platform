@@ -23,8 +23,17 @@ public class Student extends DataEntity<Student> {
 	private Date birthday;		// 出生日期
 	private String school;		// 学校名称
 	private String classesId;		// 班级
-	private String status;		// 状态（0正常 1删除 2停用）
+	private String status;		// 学生当前状态
+	private Date signTime;
 	
+	public Date getSignTime() {
+		return signTime;
+	}
+
+	public void setSignTime(Date signTime) {
+		this.signTime = signTime;
+	}
+
 	public Student() {
 		super();
 	}
@@ -86,7 +95,7 @@ public class Student extends DataEntity<Student> {
 		this.classesId = classesId;
 	}
 	
-	@Length(min=0, max=1, message="状态（0正常 1删除 2停用）长度必须介于 0 和 1 之间")
+	@Length(min=0, max=1, message="学生当前状态 ，长度必须介于 0 和 1 之间")
 	public String getStatus() {
 		return status;
 	}

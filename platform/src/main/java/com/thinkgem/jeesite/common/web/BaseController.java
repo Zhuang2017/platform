@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.google.gson.Gson;
 import com.thinkgem.jeesite.common.beanvalidator.BeanValidators;
 import com.thinkgem.jeesite.common.mapper.JsonMapper;
 import com.thinkgem.jeesite.common.utils.DateUtils;
@@ -33,7 +34,6 @@ import com.thinkgem.jeesite.common.utils.DateUtils;
 /**
  * 控制器支持类
  * @author ThinkGem
- * @version 2013-3-23
  */
 public abstract class BaseController {
 
@@ -41,7 +41,10 @@ public abstract class BaseController {
 	 * 日志对象
 	 */
 	protected Logger logger = LoggerFactory.getLogger(getClass());
-
+	/**
+	 * json格式转换工具
+	 */
+	protected static Gson gson = new Gson();
 	/**
 	 * 管理基础路径
 	 */

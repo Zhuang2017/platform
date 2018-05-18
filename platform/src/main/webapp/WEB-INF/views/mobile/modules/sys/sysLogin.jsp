@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>${fns:getConfig('productName')}</title>
+    <title>儿童智能托管平台</title>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -28,7 +28,7 @@
 	            	<div>&nbsp;</div>
 	            	<div class="input-group">
 		                <div class="input-row">
-		                    <label for="username">账号</label>
+		                    <label for="username">账号1</label>
 		                    <input type="text" name="username" id="username" placeholder="请填写登录账号">
 		                </div>
 		                <div class="input-row">

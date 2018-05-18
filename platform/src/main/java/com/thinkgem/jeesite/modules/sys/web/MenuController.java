@@ -29,8 +29,6 @@ import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 
 /**
  * 菜单Controller
- * @author ThinkGem
- * @version 2013-3-23
  */
 @Controller
 @RequestMapping(value = "${adminPath}/sys/menu")

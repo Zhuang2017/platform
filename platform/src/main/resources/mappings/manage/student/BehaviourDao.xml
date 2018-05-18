@@ -34,6 +34,15 @@
 		WHERE a.id = #{id}
 	</select>
 	
+	<select id="queryListByStuId" resultType="behaviour">
+		SELECT 
+			<include refid="behaviourColumns"/>
+		FROM my_behaviour a
+		<include refid="behaviourJoins"/>
+		WHERE a.stu_id = #{stuId}
+		LIMIT #{beginRow},#{rows}
+	</select>
+	
 	<select id="findList" resultType="Behaviour">
 		SELECT 
 			<include refid="behaviourColumns"/>

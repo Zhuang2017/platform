@@ -5,6 +5,7 @@ package com.thinkgem.jeesite.manage.student.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,12 @@ import com.thinkgem.jeesite.manage.student.dao.StudentDao;
 @Service
 @Transactional(readOnly = true)
 public class StudentService extends CrudService<StudentDao, Student> {
+	@Autowired
+	private StudentDao studentDao;
+	
+	public List<Student> queryByUserId(String userId) {
+		return studentDao.queryByUserId(userId);
+	}
 
 	public Student get(String id) {
 		return super.get(id);

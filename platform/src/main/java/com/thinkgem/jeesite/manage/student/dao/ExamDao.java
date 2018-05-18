@@ -3,6 +3,10 @@
  */
 package com.thinkgem.jeesite.manage.student.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.thinkgem.jeesite.manage.student.entity.Exam;
@@ -14,5 +18,7 @@ import com.thinkgem.jeesite.manage.student.entity.Exam;
  */
 @MyBatisDao
 public interface ExamDao extends CrudDao<Exam> {
+
+	List<Exam> queryListByStuId(@Param("stuId")String stuId, @Param("beginRow")int beginRow, @Param("rows")int rows);
 	
 }

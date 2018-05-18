@@ -30,8 +30,6 @@ import com.thinkgem.jeesite.modules.sys.service.DictService;
 
 /**
  * 字典Controller
- * @author ThinkGem
- * @version 2014-05-16
  */
 @Controller
 @RequestMapping(value = "${adminPath}/sys/dict")

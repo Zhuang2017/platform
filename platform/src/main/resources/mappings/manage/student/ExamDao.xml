@@ -8,6 +8,7 @@
 		b.name AS "student.name",
 		a.subject_id AS "subject",
 		a.score AS "score",
+		a.commit AS "commit",
 		a.exam_time AS "examTime",
 		a.exam_name AS "examName",
 		a.create_by AS "createBy.id",
@@ -29,7 +30,14 @@
 		<include refid="examJoins"/>
 		WHERE a.id = #{id}
 	</select>
-	
+		<select id="queryListByStuId" resultType="Exam">
+		SELECT 
+			<include refid="examColumns"/>
+		FROM my_exam a
+		<include refid="examJoins"/>
+		WHERE a.stu_id = #{stuId}
+		LIMIT #{beginRow},#{rows}
+	</select>
 	<select id="findList" resultType="Exam">
 		SELECT 
 			<include refid="examColumns"/>

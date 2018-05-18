@@ -5,12 +5,14 @@ package com.thinkgem.jeesite.manage.student.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.service.CrudService;
 import com.thinkgem.jeesite.manage.student.entity.Behaviour;
+import com.thinkgem.jeesite.manage.student.entity.Exam;
 import com.thinkgem.jeesite.manage.student.dao.BehaviourDao;
 
 /**
@@ -22,6 +24,9 @@ import com.thinkgem.jeesite.manage.student.dao.BehaviourDao;
 @Transactional(readOnly = true)
 public class BehaviourService extends CrudService<BehaviourDao, Behaviour> {
 
+	@Autowired
+	private BehaviourDao behaviourDao;
+	
 	public Behaviour get(String id) {
 		return super.get(id);
 	}
@@ -42,6 +47,10 @@ public class BehaviourService extends CrudService<BehaviourDao, Behaviour> {
 	@Transactional(readOnly = false)
 	public void delete(Behaviour behaviour) {
 		super.delete(behaviour);
+	}
+	
+	public List<Behaviour> queryListByStuId(String stuId) {
+		return behaviourDao.queryListByStuId(stuId, 0, 6);
 	}
 	
 }

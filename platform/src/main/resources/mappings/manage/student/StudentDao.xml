@@ -1,52 +1,65 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinkgem.jeesite.manage.student.dao.StudentDao">
-    
+
 	<sql id="studentColumns">
 		a.id AS "id",
 		a.name AS "name",
 		a.sex AS "sex",
-		a.trusts_id AS "trusts.id",
+		a.trusts_id AS
+		"trusts.id",
 		b.name AS "trusts.name",
 		a.birthday AS "birthday",
-		a.school AS "school",
+		a.school
+		AS "school",
 		a.classes_id AS "classesId",
 		a.create_date AS "createDate",
 		a.update_date AS "updateDate",
 		a.status AS "status",
-		a.remarks AS "remarks",
+		a.sign_time AS "signTime",
+		a.remarks AS
+		"remarks",
 		a.create_by AS "createBy.id",
 		a.update_by AS "updateBy.id",
 		a.del_flag AS "delFlag"
 	</sql>
-	
+
 	<sql id="studentJoins">
-	LEFT JOIN
-	sys_office b
-	ON
-	a.trusts_id = b.id
+		LEFT JOIN
+		sys_office b
+		ON
+		a.trusts_id = b.id
 	</sql>
-    
-	<select id="get" resultType="Student">
-		SELECT 
-			<include refid="studentColumns"/>
+	<select id="queryByUserId" resultType="Student">
+		SELECT
+		<include refid="studentColumns" />
 		FROM my_student a
-		<include refid="studentJoins"/>
+		<include refid="studentJoins" />
+		LEFT JOIN my_stu_user c ON a.id = c.stu_id
+		LEFT JOIN sys_user d ON d.id = c.user_id
+		where d.id = #{userId}
+	</select>
+
+	<select id="get" resultType="Student">
+		SELECT
+		<include refid="studentColumns" />
+		FROM my_student a
+		<include refid="studentJoins" />
 		WHERE a.id = #{id}
 	</select>
-	
+
 	<select id="findList" resultType="Student">
-		SELECT 
-			<include refid="studentColumns"/>
+		SELECT
+		<include refid="studentColumns" />
 		FROM my_student a
-		<include refid="studentJoins"/>
+		<include refid="studentJoins" />
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="name != null and name != ''">
-				AND a.name LIKE 
-					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
-					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
-					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+				AND a.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
 			</if>
 			<if test="sex != null and sex != ''">
 				AND a.sex = #{sex}
@@ -73,15 +86,15 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<select id="findAllList" resultType="Student">
-		SELECT 
-			<include refid="studentColumns"/>
+		SELECT
+		<include refid="studentColumns" />
 		FROM my_student a
-		<include refid="studentJoins"/>
+		<include refid="studentJoins" />
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
-		</where>		
+		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
@@ -91,60 +104,60 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<insert id="insert">
 		INSERT INTO my_student(
-			id,
-			name,
-			sex,
-			trusts_id,
-			birthday,
-			school,
-			classes_id,
-			create_date,
-			update_date,
-			status,
-			remarks,
-			create_by,
-			update_by,
-			del_flag
+		id,
+		name,
+		sex,
+		trusts_id,
+		birthday,
+		school,
+		classes_id,
+		create_date,
+		update_date,
+		status,
+		remarks,
+		create_by,
+		update_by,
+		del_flag
 		) VALUES (
-			#{id},
-			#{name},
-			#{sex},
-			#{trusts.id},
-			#{birthday},
-			#{school},
-			#{classesId},
-			#{createDate},
-			#{updateDate},
-			#{status},
-			#{remarks},
-			#{createBy.id},
-			#{updateBy.id},
-			#{delFlag}
+		#{id},
+		#{name},
+		#{sex},
+		#{trusts.id},
+		#{birthday},
+		#{school},
+		#{classesId},
+		#{createDate},
+		#{updateDate},
+		#{status},
+		#{remarks},
+		#{createBy.id},
+		#{updateBy.id},
+		#{delFlag}
 		)
 	</insert>
-	
+
 	<update id="update">
-		UPDATE my_student SET 	
-			name = #{name},
-			sex = #{sex},
-			trusts_id = #{trusts.id},
-			birthday = #{birthday},
-			school = #{school},
-			classes_id = #{classesId},
-			update_date = #{updateDate},
-			status = #{status},
-			remarks = #{remarks},
-			update_by = #{updateBy.id}
+		UPDATE my_student SET
+		name = #{name},
+		sex = #{sex},
+		trusts_id = #{trusts.id},
+		birthday = #{birthday},
+		school = #{school},
+		classes_id = #{classesId},
+		update_date = #{updateDate},
+		status = #{status},
+		remarks = #{remarks},
+		update_by = #{updateBy.id}
 		WHERE id = #{id}
 	</update>
-	
+
 	<update id="delete">
-		UPDATE my_student SET 
-			del_flag = #{DEL_FLAG_DELETE}
+		UPDATE my_student SET
+		del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
-	
+
 </mapper>

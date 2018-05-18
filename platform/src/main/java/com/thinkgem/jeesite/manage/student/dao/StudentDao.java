@@ -3,6 +3,8 @@
  */
 package com.thinkgem.jeesite.manage.student.dao;
 
+import java.util.List;
+
 import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.thinkgem.jeesite.manage.student.entity.Student;
@@ -14,5 +16,5 @@ import com.thinkgem.jeesite.manage.student.entity.Student;
  */
 @MyBatisDao
 public interface StudentDao extends CrudDao<Student> {
-	
+	List<Student> queryByUserId(String userId);
 }

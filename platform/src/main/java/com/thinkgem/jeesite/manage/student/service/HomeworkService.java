@@ -5,6 +5,7 @@ package com.thinkgem.jeesite.manage.student.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,8 @@ import com.thinkgem.jeesite.manage.student.dao.HomeworkDao;
 @Service
 @Transactional(readOnly = true)
 public class HomeworkService extends CrudService<HomeworkDao, Homework> {
-
+	@Autowired
+	private HomeworkDao homeworkDao;
 	public Homework get(String id) {
 		return super.get(id);
 	}
@@ -42,6 +44,10 @@ public class HomeworkService extends CrudService<HomeworkDao, Homework> {
 	@Transactional(readOnly = false)
 	public void delete(Homework homework) {
 		super.delete(homework);
+	}
+	
+	public List<Homework> queryListByStuId(String stuId) {
+		return homeworkDao.queryListByStuId(stuId, 0, 6);
 	}
 	
 }

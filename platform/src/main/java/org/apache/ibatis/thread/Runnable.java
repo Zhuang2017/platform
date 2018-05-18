@@ -90,7 +90,7 @@ public class Runnable implements java.lang.Runnable {
 
 				System.out.println("========= Enabled refresh mybatis mapper =========");
 
-				while (true) {
+				/*while (true) {
 					try {
 						runnable.refresh(location, beforeTime);
 					} catch (Exception e1) {
@@ -103,7 +103,7 @@ public class Runnable implements java.lang.Runnable {
 						e.printStackTrace();
 					}
 
-				}
+				}*/
 			}
 		}).start();
 	}

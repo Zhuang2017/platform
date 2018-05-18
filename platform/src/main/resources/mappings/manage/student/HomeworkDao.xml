@@ -40,6 +40,14 @@
 		WHERE a.id = #{id}
 	</select>
 	
+	<select id="queryListByStuId" resultType="Homework">
+		SELECT 
+			<include refid="homeworkColumns"/>
+		FROM my_homework a
+		<include refid="homeworkJoins"/>
+		WHERE a.stu_id = #{stuId}
+		LIMIT #{beginRow},#{rows}
+	</select>
 	<select id="findList" resultType="Homework">
 		SELECT 
 			<include refid="homeworkColumns"/>

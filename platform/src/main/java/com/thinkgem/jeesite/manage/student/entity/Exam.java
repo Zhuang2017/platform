@@ -20,6 +20,7 @@ public class Exam extends DataEntity<Exam> {
 	private Student student;		// 学生
 	private String subject;		// 科目
 	private String score;		// 分数
+	private String commit;
 	private Date examTime;		// 考试日期
 	private String examName;		// 考试名称
 	private Date beginExamTime;		// 开始 考试日期
@@ -31,6 +32,14 @@ public class Exam extends DataEntity<Exam> {
 
 	public Exam(String id){
 		super(id);
+	}
+
+	public String getCommit() {
+		return commit;
+	}
+
+	public void setCommit(String commit) {
+		this.commit = commit;
 	}
 
 	public Student getStudent() {
